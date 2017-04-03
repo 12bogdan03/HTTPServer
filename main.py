@@ -130,7 +130,7 @@ class Server:
         result.append('<meta content="text/html; charset=%s">' % enc)
         result.append('<title>%s</title>\n</head>' % title)
         result.append('<body>\n<h1>%s</h1>' % title)
-        result.append('<hr>\n<ul>')
+        result.append('<hr>\n<ul type="circle">')
         for name in list:
             fullname = os.path.join(path, name)
             displayname = linkname = name
