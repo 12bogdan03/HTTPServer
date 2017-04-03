@@ -2,6 +2,7 @@ import socket
 import os
 import sys
 import signal
+from mimetypes import MimeTypes
 
 
 class Server:
@@ -40,13 +41,16 @@ class Server:
         except socket.error as e:
             print(e)
 
-    def _gen_headers(self,  code, content=b''):
+    def _gen_headers(self,  code, url='', content=b''):
         """ Generates HTTP response Headers """
+        mime = MimeTypes()
+        mime_type = mime.guess_type(url)[0]
         # determine response code
         h = ''
         if code == 200:
             h = 'HTTP/1.1 200 OK\n'
             h += 'Server: SimpleHTTPServer\n'
+            h += 'Content-Type: {}'.format(mime_type)
             h += 'Content-Length: {}'.format(len(content))
             h += 'Connection: close\n\n'  # signal that the connection wil be closed after completing the request
         elif code == 404:
@@ -77,13 +81,13 @@ class Server:
             if request_method == 'GET':
                 if os.path.isdir(path):
                     response_content = self.list_directory(path, url)
-                    response_headers = self._gen_headers(200, response_content)
+                    response_headers = self._gen_headers(200, url, response_content)
                 else:
                     # Load file content
                     try:
                         with open(path, 'rb') as file:
                                 response_content = file.read()  # read file content
-                        response_headers = self._gen_headers(200, response_content)
+                        response_headers = self._gen_headers(200, url, response_content)
 
                     except FileNotFoundError as e:  # in case file was not found, generate 404 page
                         print("Warning, file not found. Serving response code 404\n", e)
