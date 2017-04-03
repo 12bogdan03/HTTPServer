@@ -81,13 +81,14 @@ class Server:
             if request_method == 'GET':
                 if os.path.isdir(path):
                     response_content = self.list_directory(path, url)
-                    response_headers = self._gen_headers(200, url, response_content)
+                    print(path)
+                    response_headers = self._gen_headers(200, content=response_content)
                 else:
                     # Load file content
                     try:
                         with open(path, 'rb') as file:
                                 response_content = file.read()  # read file content
-                        response_headers = self._gen_headers(200, url, response_content)
+                        response_headers = self._gen_headers(200, path, response_content)
 
                     except FileNotFoundError as e:  # in case file was not found, generate 404 page
                         print("Warning, file not found. Serving response code 404\n", e)
