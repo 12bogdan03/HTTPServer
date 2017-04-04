@@ -50,9 +50,8 @@ class Server:
         if code == 200:
             h = 'HTTP/1.1 200 OK\n'
             h += 'Server: SimpleHTTPServer\n'
-            if url is not None and url != '':
+            if mime_type is not None:
                 h += 'Content-Type: {}'.format(mime_type)
-            print(h)
             h += 'Content-Length: {}'.format(len(content))
             h += 'Connection: close\n\n'  # signal that the connection wil be closed after completing the request
         elif code == 404:
